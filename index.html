@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Demokratieclips — Politik. Klar. Konsequent.</title>
 
-<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- FontAwesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<!-- Google Font: Inter -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -126,28 +123,42 @@
   @keyframes fadeUp {
     to { opacity: 1; transform: translateY(0); }
   }
+
+  /* Custom styling for the volume slider to match gold theme */
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    border: none;
+  }
 </style>
 </head>
 
 <body class="min-h-screen w-full relative">
 
-  <!-- Partikel-Hintergrund -->
   <canvas id="bg-canvas"></canvas>
 
-  <!-- Zentrale Karte -->
   <main class="relative z-10 min-h-screen w-full flex items-center justify-center px-4 py-10 sm:py-16">
     <div class="glass-card fade-up w-full max-w-4xl rounded-2xl overflow-hidden flex flex-col md:flex-row" style="animation-delay:.1s">
 
-      <!-- LINKS: Profilbereich -->
       <section class="flex-1 p-8 sm:p-10 flex flex-col justify-between">
         <div>
-          <!-- Live Indikator -->
           <div class="flex items-center gap-2 mb-8">
             <span class="live-dot"></span>
             <span class="text-[11px] tracking-[0.18em] text-white/50 font-medium uppercase">Aktuell online</span>
           </div>
 
-          <!-- Name -->
           <h1 class="text-3xl sm:text-4xl font-bold text-white tracking-tight leading-tight">
             Demokratieclips
           </h1>
@@ -155,10 +166,8 @@
             Politik-Content &amp; Edits &middot; Für die Demokratie
           </p>
 
-          <!-- Trennlinie -->
           <div class="hairline h-px w-16 my-6"></div>
 
-          <!-- Bio -->
           <p class="text-white/65 text-[15px] leading-relaxed max-w-sm">
             Moderne Politik braucht moderne Formate. Auf meinem Account teile ich
             Edits und Kurzclips, die komplexe Themen auf den Punkt bringen, Fake
@@ -167,7 +176,6 @@
           </p>
         </div>
 
-        <!-- Social Buttons -->
         <div class="mt-10">
           <p class="text-[10px] tracking-[0.2em] text-white/35 uppercase mb-4">Kontakt &amp; Kanäle</p>
           <div class="flex flex-wrap gap-3">
@@ -179,14 +187,11 @@
         </div>
       </section>
 
-      <!-- Vertikale Trennlinie (nur Desktop) -->
       <div class="hidden md:block w-px hairline-v"></div>
       <div class="block md:hidden h-px hairline w-full"></div>
 
-      <!-- RECHTS: Logo & Media -->
       <section class="flex-1 p-8 sm:p-10 flex flex-col items-center justify-center text-center bg-black/10">
 
-        <!-- EU-Sterne Logo (SVG) -->
         <svg class="logo-ring w-40 h-40 sm:w-48 sm:h-48 mb-6" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
           <circle cx="100" cy="100" r="96" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
           <circle cx="100" cy="100" r="70" fill="none" stroke="rgba(201,162,75,0.25)" stroke-width="1"/>
@@ -197,36 +202,44 @@
         <h2 class="text-white/85 font-semibold text-lg tracking-wide">Demokratieclips</h2>
         <p class="text-white/40 text-xs tracking-[0.15em] uppercase mt-1">Für ein starkes Europa</p>
 
-        <!-- Button -->
         <a href="https://www.tiktok.com/@demokratieclips" target="_blank" rel="noopener noreferrer" class="btn-primary mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/15 text-white/80 text-sm font-medium">
           🎬 Neuestes Video ansehen
         </a>
 
-        <!-- Musik-Player -->
-        <div class="mt-6 w-full max-w-[260px] rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5">
-          <audio id="audio-player" preload="none" loop>
-            <source src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Frederic_Chopin_-_Nocturne_Eb_major_Opus_9%2C_number_2.ogg" type="audio/ogg">
-            <source src="https://upload.wikimedia.org/wikipedia/commons/8/82/Nocturne_in_E_flat_major%2C_Op._9_no._2.mp3" type="audio/mpeg">
-          </audio>
+        <div class="mt-6 w-full max-w-[285px] rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-3.5">
+          <audio id="audio-player" preload="none"></audio>
 
-          <div class="flex items-center gap-3">
-            <!-- Play/Pause -->
-            <button id="play-toggle" aria-label="Play" class="shrink-0 w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/75 hover:text-white hover:border-[var(--gold)] transition-colors duration-200">
-              <i id="play-icon" class="fa-solid fa-play text-[11px] ml-0.5"></i>
-            </button>
+          <div class="flex items-center justify-between gap-2.5">
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button id="prev-btn" aria-label="Vorheriger Song" class="w-6 h-6 rounded-full flex items-center justify-center text-white/40 hover:text-white transition-colors duration-200">
+                <i class="fa-solid fa-backward text-[10px]"></i>
+              </button>
 
-            <!-- Titel + Fortschritt -->
-            <div class="flex-1 min-w-0 text-left">
-              <p class="text-[12px] text-white/75 font-medium truncate">Chopin &middot; Nocturne Op. 9 No. 2</p>
-              <div id="progress-track" class="mt-1.5 h-[3px] w-full rounded-full bg-white/10 cursor-pointer">
+              <button id="play-toggle" aria-label="Play" class="w-8 h-8 rounded-full border border-white/15 flex items-center justify-center text-white/75 hover:text-white hover:border-[var(--gold)] transition-colors duration-200">
+                <i id="play-icon" class="fa-solid fa-play text-[10px] ml-0.5"></i>
+              </button>
+
+              <button id="next-btn" aria-label="Nächster Song" class="w-6 h-6 rounded-full flex items-center justify-center text-white/40 hover:text-white transition-colors duration-200">
+                <i class="fa-solid fa-forward text-[10px]"></i>
+              </button>
+            </div>
+
+            <div class="flex-1 min-w-0 text-left px-1">
+              <p id="track-title" class="text-[11px] text-white/75 font-medium truncate">M. Ravel &middot; Une barque sur l'océan</p>
+              <div id="progress-track" class="mt-2 h-[3px] w-full rounded-full bg-white/10 cursor-pointer">
                 <div id="progress-fill" class="h-full rounded-full" style="width:0%; background: var(--gold);"></div>
               </div>
             </div>
 
-            <!-- Mute -->
-            <button id="mute-toggle" aria-label="Stumm schalten" class="shrink-0 w-7 h-7 flex items-center justify-center text-white/40 hover:text-white/80 transition-colors duration-200">
-              <i id="mute-icon" class="fa-solid fa-volume-high text-[11px]"></i>
-            </button>
+            <div id="volume-container" class="relative flex items-center gap-1.5 group shrink-0 h-7 px-1">
+              <div id="volume-slider-wrapper" class="w-0 opacity-0 pointer-events-none group-hover:w-14 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 ease-out flex items-center">
+                <input id="volume-slider" type="range" min="0" max="1" step="0.05" value="0.7" class="w-full h-[3px] accent-[var(--gold)] bg-white/20 rounded-full appearance-none cursor-pointer">
+              </div>
+              
+              <button id="mute-toggle" aria-label="Stumm schalten" class="w-5 h-5 flex items-center justify-center text-white/40 group-hover:text-white/80 transition-colors duration-200">
+                <i id="mute-icon" class="fa-solid fa-volume-high text-[11px]"></i>
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -267,22 +280,78 @@
 
     /* ============ Musik-Player ============ */
     (function musicPlayer() {
+      // Playlist Definition mit absolut rauschfreien Streams
+      const playlist = [
+        {
+          title: "M. Ravel &middot; Une barque sur l'océan",
+          src: "https://upload.wikimedia.org/wikipedia/commons/3/33/Maurice_Ravel_-_Une_barque_sur_l%27oc%C3%A9an.ogg"
+        },
+        {
+          title: "Smaxk Or Die &middot; Fatt Smaxk",
+          src: "https://ia600301.us.archive.org/2/items/SmaxkOrDie-FattSmaxk/SmaxkOrDie-FattSmaxk.mp3"
+        }
+      ];
+
+      let currentTrackIndex = 0;
+
       const audio = document.getElementById("audio-player");
       const playBtn = document.getElementById("play-toggle");
       const playIcon = document.getElementById("play-icon");
+      const prevBtn = document.getElementById("prev-btn");
+      const nextBtn = document.getElementById("next-btn");
+      const trackTitle = document.getElementById("track-title");
       const muteBtn = document.getElementById("mute-toggle");
       const muteIcon = document.getElementById("mute-icon");
       const progressTrack = document.getElementById("progress-track");
       const progressFill = document.getElementById("progress-fill");
+      const volumeSlider = document.getElementById("volume-slider");
 
       if (!audio) return;
 
+      // Initialen Song laden
+      function loadTrack(index) {
+        currentTrackIndex = index;
+        audio.src = playlist[index].src;
+        trackTitle.innerHTML = playlist[index].title;
+        progressFill.style.width = "0%";
+      }
+
+      function playTrack() {
+        audio.play().catch(() => {});
+      }
+
+      function changeTrack(direction) {
+        let newIndex = currentTrackIndex + direction;
+        if (newIndex >= playlist.length) newIndex = 0;
+        if (newIndex < 0) newIndex = playlist.length - 1;
+        
+        const wasPlaying = !audio.paused;
+        loadTrack(newIndex);
+        if (wasPlaying) {
+          playTrack();
+        }
+      }
+
+      // Initialisierung
+      loadTrack(0);
+      audio.volume = volumeSlider.value;
+
+      // Event Listeners für Steuerung
       playBtn.addEventListener("click", () => {
         if (audio.paused) {
-          audio.play().catch(() => {});
+          playTrack();
         } else {
           audio.pause();
         }
+      });
+
+      prevBtn.addEventListener("click", () => changeTrack(-1));
+      nextBtn.addEventListener("click", () => changeTrack(1));
+
+      // Automatisches Abspielen des nächsten Songs bei Track-Ende
+      audio.addEventListener("ended", () => {
+        changeTrack(1);
+        playTrack();
       });
 
       audio.addEventListener("play", () => {
@@ -310,11 +379,40 @@
         audio.currentTime = ratio * audio.duration;
       });
 
+      // Volume & Mute Logik
+      let lastVolume = volumeSlider.value;
+
+      volumeSlider.addEventListener("input", (e) => {
+        const val = e.target.value;
+        audio.volume = val;
+        if (val > 0) {
+          audio.muted = false;
+          lastVolume = val;
+        }
+        updateVolumeIcon(val, audio.muted);
+      });
+
       muteBtn.addEventListener("click", () => {
         audio.muted = !audio.muted;
-        muteIcon.classList.toggle("fa-volume-high", !audio.muted);
-        muteIcon.classList.toggle("fa-volume-xmark", audio.muted);
+        if (audio.muted) {
+          volumeSlider.value = 0;
+        } else {
+          volumeSlider.value = lastVolume;
+          audio.volume = lastVolume;
+        }
+        updateVolumeIcon(volumeSlider.value, audio.muted);
       });
+
+      function updateVolumeIcon(volume, isMuted) {
+        muteIcon.className = "fa-solid text-[11px]";
+        if (isMuted || volume == 0) {
+          muteIcon.classList.add("fa-volume-xmark");
+        } else if (volume < 0.4) {
+          muteIcon.classList.add("fa-volume-low");
+        } else {
+          muteIcon.classList.add("fa-volume-high");
+        }
+      }
     })();
 
     /* ============ Partikel-Konstellations-Hintergrund ============ */
@@ -399,7 +497,6 @@
               ctx.stroke();
             }
           }
-          // subtle cursor glow point
           ctx.beginPath();
           ctx.arc(mouse.x, mouse.y, 2, 0, Math.PI * 2);
           ctx.fillStyle = "rgba(201,162,75,0.8)";
@@ -418,7 +515,6 @@
         mouse.x = null;
         mouse.y = null;
       });
-      // Touch support (leichte Verbindung beim Antippen)
       window.addEventListener("touchmove", (e) => {
         if (e.touches[0]) {
           mouse.x = e.touches[0].clientX;
