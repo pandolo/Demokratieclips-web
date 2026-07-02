@@ -206,7 +206,7 @@
         </a>
 
         <div class="mt-6 w-full max-w-[285px] rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-3.5">
-          <audio id="audio-player" preload="auto" crossorigin="anonymous"></audio>
+          <audio id="audio-player" preload="auto"></audio>
 
           <div class="flex items-center justify-between gap-2.5">
             <div class="flex items-center gap-1.5 shrink-0">
@@ -279,11 +279,11 @@
 
     /* ============ Musik-Player ============ */
     (function musicPlayer() {
-      // Optimierte Direkt-Streaming-Links
+      // 100% kompatible MP3-Streams ohne CORS- und Safari-Hürden
       const playlist = [
         {
           title: "M. Ravel &middot; Une barque sur l'océan",
-          src: "https://upload.wikimedia.org/wikipedia/commons/3/33/Maurice_Ravel_-_Une_barque_sur_l%27oc%C3%A9an.ogg"
+          src: "https://upload.wikimedia.org/wikipedia/commons/2/20/Maurice_Ravel_-_Une_barque_sur_l%27oc%C3%A9an_-_01_-_Une_barque_sur_l%27oc%C3%A9an.mp3"
         },
         {
           title: "Smaxk Or Die &middot; Fatt Smaxk",
@@ -312,14 +312,13 @@
         audio.src = playlist[index].src;
         trackTitle.innerHTML = playlist[index].title;
         progressFill.style.width = "0%";
-        audio.load(); // Erzwingt das Neuladen der Audio-Ressource
       }
 
       function playTrack() {
         const playPromise = audio.play();
         if (playPromise !== undefined) {
           playPromise.catch(error => {
-            console.log("Autoplay blockiert oder lädt noch: ", error);
+            console.log("Warten auf Benutzerinteraktion...", error);
           });
         }
       }
@@ -332,7 +331,6 @@
         const wasPlaying = !audio.paused;
         loadTrack(newIndex);
         if (wasPlaying) {
-          // Kurze Verzögerung für stabileres Laden beim Switchen
           setTimeout(playTrack, 50);
         }
       }
