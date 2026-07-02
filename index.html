@@ -201,6 +201,34 @@
         <a href="https://www.tiktok.com/@demokratieclips" target="_blank" rel="noopener noreferrer" class="btn-primary mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/15 text-white/80 text-sm font-medium">
           🎬 Neuestes Video ansehen
         </a>
+
+        <!-- Musik-Player -->
+        <div class="mt-6 w-full max-w-[260px] rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5">
+          <audio id="audio-player" preload="none" loop>
+            <source src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Frederic_Chopin_-_Nocturne_Eb_major_Opus_9%2C_number_2.ogg" type="audio/ogg">
+            <source src="https://upload.wikimedia.org/wikipedia/commons/8/82/Nocturne_in_E_flat_major%2C_Op._9_no._2.mp3" type="audio/mpeg">
+          </audio>
+
+          <div class="flex items-center gap-3">
+            <!-- Play/Pause -->
+            <button id="play-toggle" aria-label="Play" class="shrink-0 w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/75 hover:text-white hover:border-[var(--gold)] transition-colors duration-200">
+              <i id="play-icon" class="fa-solid fa-play text-[11px] ml-0.5"></i>
+            </button>
+
+            <!-- Titel + Fortschritt -->
+            <div class="flex-1 min-w-0 text-left">
+              <p class="text-[12px] text-white/75 font-medium truncate">Chopin &middot; Nocturne Op. 9 No. 2</p>
+              <div id="progress-track" class="mt-1.5 h-[3px] w-full rounded-full bg-white/10 cursor-pointer">
+                <div id="progress-fill" class="h-full rounded-full" style="width:0%; background: var(--gold);"></div>
+              </div>
+            </div>
+
+            <!-- Mute -->
+            <button id="mute-toggle" aria-label="Stumm schalten" class="shrink-0 w-7 h-7 flex items-center justify-center text-white/40 hover:text-white/80 transition-colors duration-200">
+              <i id="mute-icon" class="fa-solid fa-volume-high text-[11px]"></i>
+            </button>
+          </div>
+        </div>
       </section>
     </div>
   </main>
@@ -235,6 +263,58 @@
         poly.setAttribute("opacity", "0.92");
         g.appendChild(poly);
       }
+    })();
+
+    /* ============ Musik-Player ============ */
+    (function musicPlayer() {
+      const audio = document.getElementById("audio-player");
+      const playBtn = document.getElementById("play-toggle");
+      const playIcon = document.getElementById("play-icon");
+      const muteBtn = document.getElementById("mute-toggle");
+      const muteIcon = document.getElementById("mute-icon");
+      const progressTrack = document.getElementById("progress-track");
+      const progressFill = document.getElementById("progress-fill");
+
+      if (!audio) return;
+
+      playBtn.addEventListener("click", () => {
+        if (audio.paused) {
+          audio.play().catch(() => {});
+        } else {
+          audio.pause();
+        }
+      });
+
+      audio.addEventListener("play", () => {
+        playIcon.classList.remove("fa-play", "ml-0.5");
+        playIcon.classList.add("fa-pause");
+        playBtn.setAttribute("aria-label", "Pause");
+      });
+
+      audio.addEventListener("pause", () => {
+        playIcon.classList.remove("fa-pause");
+        playIcon.classList.add("fa-play", "ml-0.5");
+        playBtn.setAttribute("aria-label", "Play");
+      });
+
+      audio.addEventListener("timeupdate", () => {
+        if (audio.duration) {
+          progressFill.style.width = (audio.currentTime / audio.duration) * 100 + "%";
+        }
+      });
+
+      progressTrack.addEventListener("click", (e) => {
+        if (!audio.duration) return;
+        const rect = progressTrack.getBoundingClientRect();
+        const ratio = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = ratio * audio.duration;
+      });
+
+      muteBtn.addEventListener("click", () => {
+        audio.muted = !audio.muted;
+        muteIcon.classList.toggle("fa-volume-high", !audio.muted);
+        muteIcon.classList.toggle("fa-volume-xmark", audio.muted);
+      });
     })();
 
     /* ============ Partikel-Konstellations-Hintergrund ============ */
