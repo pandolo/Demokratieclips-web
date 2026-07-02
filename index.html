@@ -124,6 +124,7 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* Custom styling for the volume slider to match gold theme */
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -206,7 +207,7 @@
         </a>
 
         <div class="mt-6 w-full max-w-[285px] rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-3.5">
-          <audio id="audio-player" preload="auto"></audio>
+          <audio id="audio-player" preload="none"></audio>
 
           <div class="flex items-center justify-between gap-2.5">
             <div class="flex items-center gap-1.5 shrink-0">
@@ -279,15 +280,15 @@
 
     /* ============ Musik-Player ============ */
     (function musicPlayer() {
-      // 100% kompatible MP3-Streams ohne CORS- und Safari-Hürden
+      // Playlist Definition mit absolut rauschfreien Streams
       const playlist = [
         {
           title: "M. Ravel &middot; Une barque sur l'océan",
-          src: "https://upload.wikimedia.org/wikipedia/commons/2/20/Maurice_Ravel_-_Une_barque_sur_l%27oc%C3%A9an_-_01_-_Une_barque_sur_l%27oc%C3%A9an.mp3"
+          src: "Miroirs III. Une barque sur l'océan - André Laplante - Topic (128k).mp3"
         },
         {
           title: "Smaxk Or Die &middot; Fatt Smaxk",
-          src: "https://archive.org/download/SmaxkOrDie-FattSmaxk/SmaxkOrDie-FattSmaxk.mp3"
+          src: "Fatt Smaxk - Smaxk Or Die (Official Music Video) [Dir. By Kharkee] - Fatt Smaxk (128k).mp3"
         }
       ];
 
@@ -307,6 +308,7 @@
 
       if (!audio) return;
 
+      // Initialen Song laden
       function loadTrack(index) {
         currentTrackIndex = index;
         audio.src = playlist[index].src;
@@ -315,12 +317,7 @@
       }
 
       function playTrack() {
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            console.log("Warten auf Benutzerinteraktion...", error);
-          });
-        }
+        audio.play().catch(() => {});
       }
 
       function changeTrack(direction) {
@@ -331,7 +328,7 @@
         const wasPlaying = !audio.paused;
         loadTrack(newIndex);
         if (wasPlaying) {
-          setTimeout(playTrack, 50);
+          playTrack();
         }
       }
 
@@ -339,6 +336,7 @@
       loadTrack(0);
       audio.volume = volumeSlider.value;
 
+      // Event Listeners für Steuerung
       playBtn.addEventListener("click", () => {
         if (audio.paused) {
           playTrack();
@@ -350,18 +348,21 @@
       prevBtn.addEventListener("click", () => changeTrack(-1));
       nextBtn.addEventListener("click", () => changeTrack(1));
 
+      // Automatisches Abspielen des nächsten Songs bei Track-Ende
       audio.addEventListener("ended", () => {
         changeTrack(1);
-        setTimeout(playTrack, 50);
+        playTrack();
       });
 
       audio.addEventListener("play", () => {
-        playIcon.className = "fa-solid fa-pause text-[10px]";
+        playIcon.classList.remove("fa-play", "ml-0.5");
+        playIcon.classList.add("fa-pause");
         playBtn.setAttribute("aria-label", "Pause");
       });
 
       audio.addEventListener("pause", () => {
-        playIcon.className = "fa-solid fa-play text-[10px] ml-0.5";
+        playIcon.classList.remove("fa-pause");
+        playIcon.classList.add("fa-play", "ml-0.5");
         playBtn.setAttribute("aria-label", "Play");
       });
 
@@ -378,6 +379,7 @@
         audio.currentTime = ratio * audio.duration;
       });
 
+      // Volume & Mute Logik
       let lastVolume = volumeSlider.value;
 
       volumeSlider.addEventListener("input", (e) => {
@@ -420,7 +422,7 @@
       let width, height, particles;
       let mouse = { x: null, y: null, radius: 150 };
 
-      const DENSITY = 9000;
+      const DENSITY = 9000; // px^2 per particle
       const MAX_LINK_DIST = 130;
       const MOUSE_LINK_DIST = 170;
 
@@ -447,6 +449,7 @@
       function step() {
         ctx.clearRect(0, 0, width, height);
 
+        // update + draw particles
         for (let p of particles) {
           p.x += p.vx;
           p.y += p.vy;
@@ -460,6 +463,7 @@
           ctx.fill();
         }
 
+        // connections between nearby particles
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
             const dx = particles[i].x - particles[j].x;
@@ -477,6 +481,7 @@
           }
         }
 
+        // connections to mouse
         if (mouse.x !== null) {
           for (let p of particles) {
             const dx = p.x - mouse.x;
